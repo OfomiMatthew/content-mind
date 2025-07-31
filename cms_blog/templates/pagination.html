@@ -1,0 +1,21 @@
+<div class="is-flex is-justify-content-center is-align-items-center mt-5" style="gap: 0.5rem">
+  {% if page.has_previous %}
+    <a href="?page={{page.previous_page_number}}" class="button is-small">
+      Previous
+    </a>
+  {% else %}
+    <a class="button is-small" disabled>Previous</a>
+  {% endif %}
+
+  <span class="has-text-weight-semibold mx-2">
+    Page {{page.number}} of {{page.paginator.num_pages}}
+  </span>
+
+  {% if page.has_next %}
+    <a href="?page={{page.next_page_number}}" class="button is-small">
+      Next
+    </a>
+  {% else %}
+    <a class="button is-small" disabled>Next</a>
+  {% endif %}
+</div>

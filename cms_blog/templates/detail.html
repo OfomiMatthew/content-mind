@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% load cms_blog_tags %}
+
+{% block title %}
+  {{ post.title }} | Content Management System
+{% endblock title %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-two-thirds">
+        <!-- Back link -->
+        <div class="mb-5">
+          <a href="{% url 'cms_blog:post_list' %}" class="button is-text">
+            <span class="icon">
+              <i class="fas fa-arrow-left"></i>
+            </span>
+            <span>Back to Posts</span>
+          </a>
+        </div>
+
+        <!-- Post Header -->
+        <article class="mb-6">
+          <h1 class="title is-2 has-text-weight-bold mb-5">{{ post.title }}</h1>
+          
+          <div class="subtitle is-5 has-text-grey mb-4 mt-5">
+            <span class="icon-text">
+              <span class="icon">
+                <i class="fas fa-user"></i>
+              </span>
+              <span>By {{ post.author }}</span>
+            </span>
+            <span class="icon-text ml-4">
+              <span class="icon">
+                <i class="far fa-calendar-alt"></i>
+              </span>
+              <span>{{ post.publish|date:"F j, Y" }}</span>
+            </span>
+          </div>
+
+          <!-- Post Content -->
+          <div class="content post-body">
+            {{ post.body|markdown }}
+          </div>
+        </article>
+
+        <!-- Share Button -->
+        <div class="has-text-centered mt-5 mb-6">
+          <a href="{% url 'cms_blog:post_share' post.id %}" class="button is-primary is-outlined">
+            <span class="icon">
+              <i class="fas fa-share"></i>
+            </span>
+            <span>Share this post</span>
+          </a>
+        </div>
+
+       <div class="similar-posts mt-6">
+  <h3 class="title is-4 mb-4 has-text-grey-dark">Similar Posts</h3>
+  
+  {% for post in similar_posts %}
+    <article class="media mb-4">
+      <div class="media-content">
+        <a href="{{ post.get_absolute_url }}" class="is-size-5 has-text-link">
+          {{ post.title }}
+        </a>
+      </div>
+    </article>
+  {% empty %}
+    <div class="notification is-light">
+      There are no similar posts yet.
+    </div>
+  {% endfor %}
+</div>
+
+        <!-- Comments Section -->
+        <div class="comments-section mt-6">
+          <div class="box">
+            <h2 class="title is-4 mb-5">
+              <span class="icon-text">
+                <span class="icon">
+                  <i class="far fa-comments"></i>
+                </span>
+                <span>
+                  {% with comments.count as total_comments %}
+                    {{ total_comments }} comment{{ total_comments|pluralize }}
+                  {% endwith %}
+                </span>
+              </span>
+            </h2>
+
+            {% for comment in comments %}
+            <article class="media comment mb-5">
+              <div class="media-content">
+                <div class="content">
+                  <p class="is-size-6 has-text-grey mb-2">
+                    <strong>{{ comment.name }}</strong>
+                    <small>on {{ comment.created|date:"F j, Y" }}</small>
+                  </p>
+                  <div class="comment-body">
+                    {{ comment.body|linebreaks }}
+                  </div>
+                </div>
+              </div>
+            </article>
+            {% empty %}
+            <div class="notification is-light">
+              There are no comments yet.
+            </div>
+            {% endfor %}
+
+            <!-- Comment Form -->
+            <div class="mt-6">
+              {% include 'includes/comment_form.html' %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .post-body {
+    font-size: 1.1rem;
+    line-height: 1.7;
+  }
+  
+  .comment {
+    padding: 1.25rem;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+  }
+  
+  .comment-body {
+    padding-left: 0.5rem;
+    border-left: 2px solid #ddd;
+  }
+  
+  .comment:not(:last-child) {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+   .similar-posts {
+    padding: 1.5rem;
+    border-left: 3px solid #4361ee;
+    background-color: #f9f9f9;
+    border-radius: 0 4px 4px 0;
+  }
+  
+  .similar-posts .media:not(:last-child) {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1rem;
+  }
+</style>
+{% endblock content %}

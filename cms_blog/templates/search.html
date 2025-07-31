@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load cms_blog_tags %}
+
+{% block title %}
+  Search for "{{ query }}" | Content Management System
+{% endblock title %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-two-thirds">
+        {% if query %}
+          <!-- Search Results Header -->
+          <div class="block has-text-centered mb-6">
+            <h1 class="title is-2">Search Results</h1>
+            <h2 class="subtitle is-4">
+              Showing results for <span class="has-text-weight-semibold">"{{query}}"</span>
+            </h2>
+            
+            <div class="notification is-light">
+              {% with results.count as total_results %}
+                Found <span class="has-text-weight-bold">{{ total_results }}</span> 
+                result{{ total_results|pluralize }}
+              {% endwith %}
+            </div>
+          </div>
+
+          <!-- Search Results List -->
+          <div class="search-results">
+            {% for post in results %}
+              <div class="box mb-5">
+                <article class="media">
+                  <div class="media-content">
+                    <div class="content">
+                      <h3 class="title is-4">
+                        <a href="{{ post.get_absolute_url }}" class="has-text-dark">
+                          {{ post.title }}
+                        </a>
+                      </h3>
+                      <div class="post-excerpt">
+                        {{ post.body|markdown|truncatewords_html:15 }}
+                      </div>
+                      <a href="{{ post.get_absolute_url }}" class="button is-small is-link is-outlined mt-3">
+                        Read more
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            {% empty %}
+              <div class="notification is-warning">
+                <p>No results found for "{{query}}"</p>
+                <p class="mt-2">
+                  Try different keywords or 
+                  <a href="{% url 'cms_blog:post_search' %}" class="has-text-weight-bold">search again</a>
+                </p>
+              </div>
+            {% endfor %}
+          </div>
+
+        {% else %}
+          <!-- Search Form -->
+          <div class="box p-6">
+            <h1 class="title is-2 has-text-centered mb-5">Search Posts</h1>
+            
+            <form method="get" class="search-form">
+              <div class="field">
+                <div class="control has-icons-left">
+                  <input class="input is-medium" 
+                         type="text" 
+                         name="query" 
+                         placeholder="Enter search terms..."
+                         required>
+                  <span class="icon is-left">
+                    <i class="fas fa-search"></i>
+                  </span>
+                </div>
+              </div>
+              
+              <div class="field has-text-centered mt-5">
+                <button type="submit" class="button is-primary is-medium">
+                  <span class="icon">
+                    <i class="fas fa-search"></i>
+                  </span>
+                  <span>Search</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}

@@ -1,0 +1,59 @@
+<div class="comment-form-container" style="max-width: 600px; margin: 0 auto;">
+  <h3 class="title is-5 mb-4">Add a comment</h3>
+  
+  <form action="{% url 'cms_blog:post_comment' post.id %}" method="post" class="comment-form">
+    {{ form.as_p }}
+    {% csrf_token %}
+    
+    <div class="field mt-4">
+      <div class="control">
+        <input type="submit" value="Post Comment" class="button is-info is-small">
+      </div>
+    </div>
+  </form>
+</div>
+
+<style>
+  .comment-form-container {
+    padding: 1.5rem;
+    background: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #eee;
+  }
+  
+  .comment-form p {
+    margin-bottom: 1rem;
+  }
+  
+  .comment-form label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+    color: #555;
+  }
+  
+  .comment-form input:not([type="submit"]),
+  .comment-form textarea {
+    width: 100%;
+    padding: 0.6em;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.95rem;
+  }
+  
+  .comment-form textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+  
+  .comment-form input[type="submit"] {
+    transition: all 0.2s ease;
+  }
+  
+  .comment-form input:focus,
+  .comment-form textarea:focus {
+    border-color: #4a8bfc;
+    box-shadow: 0 0 0 2px rgba(74, 139, 252, 0.1);
+    outline: none;
+  }
+</style>

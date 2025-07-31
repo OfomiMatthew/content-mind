@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Add a comment{% endblock title %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-half">
+        {% if comment %}
+          <!-- Comment success confirmation -->
+          <div class="box has-text-centered" style="max-width: 500px; margin: 0 auto;">
+            <span class="icon is-large has-text-success mb-3">
+              <i class="fas fa-check-circle"></i>
+            </span>
+            <h2 class="subtitle is-4 mb-4">Your comment has been added</h2>
+            <a href="{{ post.get_absolute_url }}" class="button is-text has-text-link">
+              <span class="icon">
+                <i class="fas fa-arrow-left"></i>
+              </span>
+              <span>Back to post</span>
+            </a>
+          </div>
+        {% else %}
+          <!-- Include comment form -->
+          {% include 'includes/comment_form.html' %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}
