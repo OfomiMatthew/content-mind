@@ -1,5 +1,5 @@
 from django.urls import path 
-from .views import post_list, post_detail,post_share,post_comment,post_search
+from .views import post_list, post_detail,post_share,post_comment,post_search,like_post
 from .feeds import LatestPostsFeed
 
 app_name = 'cms_blog'
@@ -11,5 +11,7 @@ urlpatterns = [
     path('<int:post_id>/comment/',post_comment,name='post_comment'),
     path('feed/',LatestPostsFeed(),name='post_feed'),
     path('search/',post_search,name='post_search'),
+  path('like/<int:post_id>/', like_post, name='like_post'),
+
     
 ]

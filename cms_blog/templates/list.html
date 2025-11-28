@@ -23,51 +23,44 @@
                 </span>
               </p>
             </div>
-              {% if tag %}
+            {% if tag %}
             <div class="notification is-info is-light mt-5">
               <p>Posts tagged with <strong>"{{tag.name}}"</strong></p>
             </div>
             {% endif %}
             <hr>
             <p><a href="{% url 'cms_blog:post_feed' %}">Subscribe to my RSS feed</a></p>
-             <hr>
+            <hr>
             <h4 class="title is-5 mt-5">Latest Posts</h4>
             {% show_latest_posts 3 %}
-            
-          
 
-             <h4 class="title is-5 mt-5">Most commented posts</h4>
-             {% get_most_commented_posts as most_commented_posts %}
-             <ul>
-              
-              {% for post in most_commented_posts  %}
+            <h4 class="title is-5 mt-5">Most commented posts</h4>
+            {% get_most_commented_posts as most_commented_posts %}
+            <ul>
+              {% for post in most_commented_posts %}
                 <li><a href="{{ post.get_absolute_url }}">{{post.title}}</a></li>
               {% endfor %}
-                
-             </ul>
+            </ul>
           </div>
         </div>
       </div>
 
       <!-- Main Content Column -->
       <div class="column">
-        <!-- Hero Section -->
-       
 
         <!-- Blog Posts List -->
-
-  
         <div class="posts-list">
           {% for post in posts %}
           <article class="box mb-5 post-card">
             <div class="content">
+
               <!-- Post Title -->
               <h2 class="title is-3">
                 <a href="{{post.get_absolute_url}}" class="has-text-dark">
                   {{post.title}}
                 </a>
               </h2>
-              
+
               <!-- Tags -->
               {% if post.tags.all %}
               <div class="tags mb-3">
@@ -84,12 +77,12 @@
                 {% endfor %}
               </div>
               {% endif %}
-              
+
               <!-- Post Excerpt -->
               <div class="post-excerpt mb-4">
-                <p>{{post.body | markdown| truncatewords_html:30}}</p>
+                <p>{{post.body | markdown | truncatewords_html:30}}</p>
               </div>
-              
+
               <!-- Post Metadata -->
               <div class="post-meta is-size-7 has-text-grey">
                 <span class="icon-text">
@@ -98,7 +91,7 @@
                   </span>
                   <span>Published on: {{post.publish}}</span>
                 </span>
-                
+
                 <span class="icon-text ml-4">
                   <span class="icon">
                     <i class="fas fa-user"></i>
@@ -106,6 +99,23 @@
                   <span>by {{post.author}}</span>
                 </span>
               </div>
+
+              <!-- ============================= -->
+              <!--       LIKE / UNLIKE BUTTON     -->
+              <!-- ============================= -->
+              <form method="POST" action="{% url 'cms_blog:like_post' post.id %}">
+                {% csrf_token %}
+
+                {% if request.session.liked_posts and post.id in request.session.liked_posts %}
+                  <button type="submit" class="button is-danger is-small mt-2">Unlike</button>
+                {% else %}
+                  <button type="submit" class="button is-primary is-small mt-2">Like</button>
+                {% endif %}
+              </form>
+
+              <p class="mt-1">{{ post.like_count }} Likes</p>
+              <!-- ============================= -->
+
             </div>
           </article>
           {% empty %}
@@ -123,19 +133,19 @@
           {% else %}
             <a class="pagination-previous is-disabled">Previous</a>
           {% endif %}
-          
+
           {% if page_obj.has_next %}
             <a href="?page={{ page_obj.next_page_number }}" class="pagination-next">Next</a>
           {% else %}
             <a class="pagination-next is-disabled">Next</a>
           {% endif %}
-          
+
           <ul class="pagination-list">
             {% for num in page_obj.paginator.page_range %}
               {% if page_obj.number == num %}
-                <li><a class="pagination-link is-current" aria-label="Page {{ num }}" aria-current="page">{{ num }}</a></li>
+                <li><a class="pagination-link is-current">{{ num }}</a></li>
               {% else %}
-                <li><a href="?page={{ num }}" class="pagination-link" aria-label="Goto page {{ num }}">{{ num }}</a></li>
+                <li><a href="?page={{ num }}" class="pagination-link">{{ num }}</a></li>
               {% endif %}
             {% endfor %}
           </ul>
@@ -145,34 +155,36 @@
     </div>
   </div>
 </section>
+
 {% include 'pagination.html' with page=posts %}
+
 <style>
   .hero {
     background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
     border-radius: 8px;
   }
-  
+
   .sidebar-box {
     position: sticky;
     top: 2rem;
     border-right: 3px solid #4361ee;
   }
-  
+
   .post-card {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     border-left: 3px solid #4361ee;
   }
-  
+
   .post-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
   }
-  
+
   @media screen and (max-width: 768px) {
     .columns {
       flex-direction: column-reverse;
     }
-    
+
     .sidebar-box {
       margin-bottom: 2rem;
       border-right: none;
@@ -180,4 +192,5 @@
     }
   }
 </style>
+
 {% endblock content %}

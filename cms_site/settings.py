@@ -15,7 +15,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-u&(*^15z%f#bnpy6ig07h*h^diy%n$af47wj2x&p)n#v@kemue'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 SITE_ID = 1
 
 ALLOWED_HOSTS = ['*']
@@ -72,19 +72,19 @@ WSGI_APPLICATION = 'cms_site.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
-    'default': dj_database_url.config(
-        default='postgresql://cms_db_instance_user:JV2rACD8kjzNzDrfAHFwmcxamCnvvo3F@dpg-d26gsuggjchc73dighag-a.oregon-postgres.render.com/cms_db_instance',
-        conn_max_age=600
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
+
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default='postgresql://cms_db_instance_user:JV2rACD8kjzNzDrfAHFwmcxamCnvvo3F@dpg-d26gsuggjchc73dighag-a.oregon-postgres.render.com/cms_db_instance',
+#         conn_max_age=600
+#     )
+# }
 
 
 # Password validation

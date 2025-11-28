@@ -1,4 +1,4 @@
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render,get_object_or_404,redirect
 from .models import Post
 from django.core.mail import send_mail
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
@@ -6,6 +6,7 @@ from django.views.decorators.http import require_POST
 from .forms import EmailPostForm,CommentForm,SearchForm
 from taggit.models import Tag
 from django.db.models import Count
+from django.http import JsonResponse
 
 
 
@@ -13,6 +14,7 @@ from django.db.models import Count
 
 def post_list(request,tag_slug=None):
   post_list = Post.published.all().order_by('-publish')
+  liked_posts = request.session.get('liked_posts', [])
   tag = None
   if tag_slug:
     tag = get_object_or_404(Tag,slug=tag_slug)
@@ -26,7 +28,7 @@ def post_list(request,tag_slug=None):
     posts = paginator.page(1)
   except EmptyPage:
     posts = paginator.page(paginator.num_pages)
-  return render(request,'list.html',{'posts':posts,'tag':tag})
+  return render(request,'list.html',{'posts':posts,'tag':tag,'liked_posts': liked_posts})
 
 
 def post_detail(request,year,month,day,post):
@@ -91,3 +93,41 @@ def post_search(request):
   return render(request, 'search.html', {'form': form, 'query': query, 'results': results})
 
   
+# @require_POST
+# def toggle_like(request,post_id):
+#   post = get_object_or_404(Post,id=post_id)
+#   if 'liked_posts' not in request.session:
+#     request.session['liked_posts'] = []
+#   liked_posts = request.session['liked_posts']
+#   if post_id in liked_posts:
+#     liked_posts.remove(post_id)
+#     post.like_count = max(0, post.like_count - 1)
+#     liked = False
+#   else:
+#     liked_posts.append(post_id)
+#     post.like_count += 1
+#     liked = True
+#   post.save()
+#   request.session['liked_posts'] = liked_posts
+#   return JsonResponse({'liked': liked, 'like_count': post.like_count})
+
+@require_POST
+def like_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+
+    liked_posts = request.session.get('liked_posts', [])
+
+    if post_id in liked_posts:
+        # Unlike
+        liked_posts.remove(post_id)
+        post.like_count -= 1
+        post.save()
+    else:
+        # Like
+        liked_posts.append(post_id)
+        post.like_count += 1
+        post.save()
+
+    request.session['liked_posts'] = liked_posts
+
+    return redirect(request.META.get('HTTP_REFERER', '/'))
