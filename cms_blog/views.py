@@ -1,12 +1,14 @@
 from django.shortcuts import render,get_object_or_404,redirect
-from .models import Post
+from .models import Post,Comment
 from django.core.mail import send_mail
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 from django.views.decorators.http import require_POST
-from .forms import EmailPostForm,CommentForm,SearchForm
+from .forms import EmailPostForm,CommentForm,SearchForm,CreatePostForm
 from taggit.models import Tag
-from django.db.models import Count
+from django.db.models import Count,Sum
 from django.http import JsonResponse
+from hitcount.models import HitCount
+import json
 
 
 
@@ -93,23 +95,7 @@ def post_search(request):
   return render(request, 'search.html', {'form': form, 'query': query, 'results': results})
 
   
-# @require_POST
-# def toggle_like(request,post_id):
-#   post = get_object_or_404(Post,id=post_id)
-#   if 'liked_posts' not in request.session:
-#     request.session['liked_posts'] = []
-#   liked_posts = request.session['liked_posts']
-#   if post_id in liked_posts:
-#     liked_posts.remove(post_id)
-#     post.like_count = max(0, post.like_count - 1)
-#     liked = False
-#   else:
-#     liked_posts.append(post_id)
-#     post.like_count += 1
-#     liked = True
-#   post.save()
-#   request.session['liked_posts'] = liked_posts
-#   return JsonResponse({'liked': liked, 'like_count': post.like_count})
+
 
 @require_POST
 def like_post(request, post_id):
@@ -131,3 +117,39 @@ def like_post(request, post_id):
     request.session['liked_posts'] = liked_posts
 
     return redirect(request.META.get('HTTP_REFERER', '/'))
+  
+  
+
+def create_post(request):
+  if request.method == 'POST':
+    form = CreatePostForm(request.POST)
+    if form.is_valid():
+      new_post = form.save(commit=False)
+      new_post.author = request.user
+      new_post.slug = new_post.title.replace(' ', '-').lower()
+      new_post.status = Post.Status.PUBLISHED
+      new_post.save()
+      form.save_m2m()
+      return redirect(new_post.get_absolute_url())
+  else:
+    form = CreatePostForm()
+  return render(request, 'create_post.html', {'form': form})
+
+
+
+
+def dashboard(request):
+    analytics = Post.objects.annotate(
+        comments_count=Count('comments')
+    ).order_by('-comments_count')
+
+    context = {
+        "analytics": analytics,
+        "total_posts": Post.objects.count(),
+        "total_likes": sum([post.like_count for post in analytics]),
+        "total_comments": sum([post.comments_count for post in analytics]),
+        "post_titles_json": json.dumps([post.title for post in analytics]),
+        "likes_data_json": json.dumps([post.like_count for post in analytics]),
+        "comments_data_json": json.dumps([post.comments_count for post in analytics]),
+    }
+    return render(request, "dashboard.html", context)

@@ -1,5 +1,5 @@
 from django import forms 
-from .models import Comment
+from .models import Comment,Post
 
 class EmailPostForm(forms.Form):
   name = forms.CharField(max_length=50)
@@ -16,3 +16,9 @@ class CommentForm(forms.ModelForm):
 class SearchForm(forms.Form):
     query = forms.CharField(label='Search', max_length=100, required=False,
                             widget=forms.TextInput(attrs={'placeholder': 'Search posts...'}))
+    
+
+class CreatePostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['title', 'body']

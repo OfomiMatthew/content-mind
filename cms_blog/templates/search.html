@@ -6,10 +6,109 @@
 {% endblock title %}
 
 {% block content %}
-<section class="section">
-  <div class="container">
-    <div class="columns is-centered">
-      <div class="column is-two-thirds">
+<section class="py-8">
+  <div class="max-w-4xl mx-auto">
+    {% if query %}
+      <!-- Search Results Header -->
+      <div class="text-center mb-10 animate-slide-up">
+        <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">Search Results</h1>
+        <h2 class="text-xl text-gray-600 mb-6">
+          Showing results for <span class="font-bold text-primary">"{{query}}"</span>
+        </h2>
+        
+        <div class="inline-block bg-blue-50 border-l-4 border-primary rounded-lg px-6 py-3">
+          {% with results.count as total_results %}
+            Found <span class="font-bold text-2xl text-primary">{{ total_results }}</span> 
+            result{{ total_results|pluralize }}
+          {% endwith %}
+        </div>
+      </div>
+
+      <!-- Search Results List -->
+      <div class="space-y-6">
+        {% for post in results %}
+          <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover-lift animate-slide-up" style="animation-delay: {{ forloop.counter0 }}00ms">
+            <article class="p-6 lg:p-8">
+              <h3 class="text-2xl lg:text-3xl font-bold text-gray-900 mb-4 transition-colors duration-300 hover:text-primary">
+                <a href="{{ post.get_absolute_url }}">
+                  {{ post.title }}
+                </a>
+              </h3>
+              <div class="prose max-w-none text-gray-700 mb-4">
+                {{ post.body|markdown|truncatewords_html:15 }}
+              </div>
+              <a href="{{ post.get_absolute_url }}" class="inline-flex items-center space-x-2 text-primary hover:text-primary-dark font-medium transition-all duration-300 hover:translate-x-1">
+                <span>Read more</span>
+                <i class="fas fa-arrow-right"></i>
+              </a>
+            </article>
+          </div>
+        {% empty %}
+          <div class="bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 px-6 py-4 rounded-lg text-center animate-scale-in">
+            <i class="fas fa-search text-4xl mb-3 opacity-50"></i>
+            <p class="font-semibold">No results found for "{{ query }}"</p>
+            <p class="text-sm mt-2">Try different keywords or check your spelling</p>
+          </div>
+        {% endfor %}
+      </div>
+
+    {% else %}
+      <!-- Search Form -->
+      <div class="text-center mb-10 animate-slide-up">
+        <i class="fas fa-search text-6xl text-primary mb-6"></i>
+        <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">Search Posts</h1>
+        <p class="text-xl text-gray-600">Find articles and tutorials</p>
+      </div>
+
+      <form action="." method="get" class="bg-white rounded-2xl shadow-lg p-8 hover-lift animate-scale-in">
+        <div class="flex">
+          <input 
+            type="search" 
+            name="query" 
+            placeholder="Search for articles..." 
+            class="flex-1 px-6 py-4 border-2 border-gray-200 rounded-l-xl focus:outline-none focus:border-primary transition-all duration-300 text-lg"
+            autofocus
+          >
+          <button 
+            type="submit" 
+            class="bg-primary text-white px-8 py-4 rounded-r-xl font-medium transition-all duration-300 hover:bg-primary-dark hover:shadow-lg"
+          >
+            <i class="fas fa-search mr-2"></i>
+            Search
+          </button>
+        </div>
+      </form>
+
+      <!-- Popular Searches -->
+      <div class="mt-10 text-center animate-fade-in" style="animation-delay: 400ms">
+        <p class="text-sm text-gray-600 mb-4">Popular searches:</p>
+        <div class="flex flex-wrap justify-center gap-3">
+          <a href="?query=technology" class="bg-gray-100 hover:bg-primary hover:text-white text-gray-700 px-4 py-2 rounded-full font-medium transition-all duration-300 hover:scale-105">
+            Technology
+          </a>
+          <a href="?query=design" class="bg-gray-100 hover:bg-primary hover:text-white text-gray-700 px-4 py-2 rounded-full font-medium transition-all duration-300 hover:scale-105">
+            Design
+          </a>
+          <a href="?query=python" class="bg-gray-100 hover:bg-primary hover:text-white text-gray-700 px-4 py-2 rounded-full font-medium transition-all duration-300 hover:scale-105">
+            Python
+          </a>
+          <a href="?query=django" class="bg-gray-100 hover:bg-primary hover:text-white text-gray-700 px-4 py-2 rounded-full font-medium transition-all duration-300 hover:scale-105">
+            Django
+          </a>
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- Back to Posts Link -->
+    <div class="text-center mt-12 animate-fade-in" style="animation-delay: 600ms">
+      <a href="{% url 'cms_blog:post_list' %}" class="inline-flex items-center space-x-2 text-primary hover:text-primary-dark font-medium transition-all duration-300 hover:translate-x-[-4px]">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to all posts</span>
+      </a>
+    </div>
+  </div>
+</section>
+{% endblock content %}
         {% if query %}
           <!-- Search Results Header -->
           <div class="block has-text-centered mb-6">
@@ -63,7 +162,6 @@
           <!-- Search Form -->
           <div class="box p-6">
             <h1 class="title is-2 has-text-centered mb-5">Search Posts</h1>
-            
             <form method="get" class="search-form">
               <div class="field">
                 <div class="control has-icons-left">
@@ -77,7 +175,6 @@
                   </span>
                 </div>
               </div>
-              
               <div class="field has-text-centered mt-5">
                 <button type="submit" class="button is-primary is-medium">
                   <span class="icon">

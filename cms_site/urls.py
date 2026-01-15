@@ -10,5 +10,6 @@ sitemaps = {
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('cms_blog.urls',namespace='cms_blog')),
-    path('sitemap.xml',sitemap,{'sitemaps':sitemaps},name='django.contrib.sitemaps.views.sitemap')
+    path('sitemap.xml',sitemap,{'sitemaps':sitemaps},name='django.contrib.sitemaps.views.sitemap'),
+    # path("ckeditor/", include("ckeditor_uploader.urls")),
 ]

@@ -1,5 +1,5 @@
 from django.urls import path 
-from .views import post_list, post_detail,post_share,post_comment,post_search,like_post
+from .views import post_list, post_detail,post_share,post_comment,post_search,like_post,create_post,dashboard
 from .feeds import LatestPostsFeed
 
 app_name = 'cms_blog'
@@ -12,6 +12,9 @@ urlpatterns = [
     path('feed/',LatestPostsFeed(),name='post_feed'),
     path('search/',post_search,name='post_search'),
   path('like/<int:post_id>/', like_post, name='like_post'),
+  path('create/', create_post, name='create_post'),
+  path('dashboard/', dashboard, name='dashboard')
+
 
     
 ]

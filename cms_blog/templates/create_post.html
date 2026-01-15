@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Create Post | CMS
+{% endblock title %}
+
+{% block content %}
+
+<section class="section">
+  <div class="container">
+
+    <div class="columns is-centered">
+      <div class="column is-10-tablet is-8-desktop is-10-widescreen">
+
+        <div class="card" style="border-radius: 12px;">
+          <header class="card-header">
+            <p class="card-header-title is-size-4 has-text-weight-semibold">
+              Create New Post
+            </p>
+          </header>
+
+          <div class="card-content">
+
+            <form action="" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              {{ form.media }}
+
+              <!-- Title Field -->
+              <div class="field">
+                <label class="label">Title</label>
+                <div class="control">
+                  <input 
+                    type="text"
+                    name="title"
+                    class="input"
+                    placeholder="Enter post title"
+                    value="{{ form.title.value|default:'' }}"
+                  >
+                </div>
+                {% if form.title.errors %}
+                  <p class="help is-danger">{{ form.title.errors.0 }}</p>
+                {% endif %}
+              </div>
+
+              <!-- Body Field -->
+              <div class="field">
+                <label class="label">Content</label>
+                {{ form.body }}
+              </div>
+
+              <!-- Submit Button -->
+              <div class="field mt-4">
+                <button class="button is-primary is-fullwidth is-medium">
+                  Create Post
+                </button>
+              </div>
+
+            </form>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% endblock content %}

@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+
+{% block title %} Dashboard | Analytics {% endblock %}
+
+{% block content %}
+
+<section class="section">
+  <div class="container">
+
+    <h1 class="title is-3 mb-5">📊 Analytics Dashboard</h1>
+
+    <!-- Top Metrics -->
+    <div class="columns is-multiline">
+
+      <div class="column is-3">
+        <div class="box has-text-centered">
+          <p class="heading">Total Posts</p>
+          <p class="title">{{ total_posts }}</p>
+        </div>
+      </div>
+
+      <div class="column is-3">
+        <div class="box has-text-centered">
+          <p class="heading">Total Likes</p>
+          <p class="title">{{ total_likes }}</p>
+        </div>
+      </div>
+
+      <div class="column is-3">
+        <div class="box has-text-centered">
+          <p class="heading">Total Comments</p>
+          <p class="title">{{ total_comments }}</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Charts -->
+    <div class="columns mt-6">
+
+      <div class="column is-6">
+        <div class="box">
+          <h2 class="title is-4">Likes per Post</h2>
+          <canvas id="likesChart"></canvas>
+        </div>
+      </div>
+
+      <div class="column is-6">
+        <div class="box">
+          <h2 class="title is-4">Comments per Post</h2>
+          <canvas id="commentsChart"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Posts Analytics Table -->
+    <div class="box mt-6">
+      <h2 class="title is-4">Posts Performance</h2>
+
+      <table class="table is-fullwidth is-striped is-hoverable">
+        <thead>
+          <tr>
+            <th>Post</th>
+            <th>Likes</th>
+            <th>Comments</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for post in analytics %}
+          <tr>
+            <td>{{ post.title }}</td>
+            <td>{{ post.like_count }}</td>
+            <td>{{ post.comments_count }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</section>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  // Prepare data
+  const postTitles = {{ post_titles_json|safe }};
+const likesData = {{ likes_data_json|safe }};
+const commentsData = {{ comments_data_json|safe }};
+
+
+  // Likes Chart
+  const likesCtx = document.getElementById('likesChart').getContext('2d');
+  new Chart(likesCtx, {
+    type: 'bar',
+    data: {
+      labels: postTitles,
+      datasets: [{
+        label: 'Likes',
+        data: likesData,
+        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+
+  // Comments Chart
+  const commentsCtx = document.getElementById('commentsChart').getContext('2d');
+  new Chart(commentsCtx, {
+    type: 'bar',
+    data: {
+      labels: postTitles,
+      datasets: [{
+        label: 'Comments',
+        data: commentsData,
+        backgroundColor: 'rgba(255, 99, 132, 0.6)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+</script>
+
+{% endblock %}

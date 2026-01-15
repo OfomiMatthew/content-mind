@@ -35,6 +35,8 @@ INSTALLED_APPS = [
      'taggit',
     #  'django.contrib.postgres',
     'cms_blog',
+    'ckeditor',
+    'hitcount',
    
 ]
 
@@ -148,3 +150,11 @@ EMAIL_USE_TLS=True
 DEFAULT_FROM_EMAIL=config('DEFAULT_FROM_EMAIL')
 
 # cxkp euzx firm ekwj
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
+        'width': '100%',
+    },
+}

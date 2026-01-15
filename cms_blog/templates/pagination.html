@@ -1,21 +1,37 @@
-<div class="is-flex is-justify-content-center is-align-items-center mt-5" style="gap: 0.5rem">
+<div class="flex justify-center items-center mt-5 space-x-2">
   {% if page.has_previous %}
-    <a href="?page={{page.previous_page_number}}" class="button is-small">
-      Previous
-    </a>
+  <a
+    href="?page={{page.previous_page_number}}"
+    class="px-4 py-2 bg-white text-gray-700 rounded-lg font-medium transition-all duration-300 hover:bg-primary hover:text-white hover:scale-105 shadow-md">
+    Previous
+  </a>
   {% else %}
-    <a class="button is-small" disabled>Previous</a>
-  {% endif %}
-
-  <span class="has-text-weight-semibold mx-2">
-    Page {{page.number}} of {{page.paginator.num_pages}}
-  </span>
-
+  <span
+    class="px-4 py-2 bg-gray-100 text-gray-400 rounded-lg font-medium cursor-not-allowed">Previous</span>
+  {% endif %} 
+  {% for num in page.paginator.page_range %} 
+  {% if page.number == num %}
+  <span
+    class="px-4 py-2 bg-primary text-white rounded-lg font-medium shadow-md transform scale-110">{{ num }}</span>
+  {% else %}
+  <a
+    href="?page={{ num }}"
+    class="px-4 py-2 bg-white text-gray-700 rounded-lg font-medium transition-all duration-300 hover:bg-primary hover:text-white hover:scale-105 shadow-md"
+    >{{ num }}</a
+  >
+  {% endif %} 
+  {% endfor %} 
   {% if page.has_next %}
-    <a href="?page={{page.next_page_number}}" class="button is-small">
-      Next
-    </a>
+  <a
+    href="?page={{page.next_page_number}}"
+    class="px-4 py-2 bg-white text-gray-700 rounded-lg font-medium transition-all duration-300 hover:bg-primary hover:text-white hover:scale-105 shadow-md"
+  >
+    Next
+  </a>
   {% else %}
-    <a class="button is-small" disabled>Next</a>
+  <span
+    class="px-4 py-2 bg-gray-100 text-gray-400 rounded-lg font-medium cursor-not-allowed"
+    >Next</span
+  >
   {% endif %}
 </div>

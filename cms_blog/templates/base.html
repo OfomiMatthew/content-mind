@@ -1,251 +1,279 @@
-
 {% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>
-    {% block title %}
-      Home
-    {% endblock title %}
-  </title>
-  <!-- Bulma CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
-  <style>
-    :root {
-      --primary: #4361ee;
-      --primary-dark: #3a56d4;
-      --gradient: linear-gradient(135deg, #4361ee 0%, #3f37c9 100%);
-    }
-    
-    body {
-      font-family: 'Inter', sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    .navbar {
-      background: var(--gradient);
-      box-shadow: 0 4px 18px rgba(67, 97, 238, 0.15);
-    }
-    
-    .navbar-item, .navbar-link {
-      color: white !important;
-      font-weight: 500;
-      transition: all 0.3s ease;
-    }
-    
-    .navbar-item:hover, .navbar-link:hover {
-      background-color: rgba(255,255,255,0.1) !important;
-      color: white !important;
-    }
-    
-    .navbar-brand strong {
-      font-weight: 700;
-      letter-spacing: -0.5px;
-    }
-    
-    .navbar-dropdown {
-      border-radius: 8px !important;
-      border: none !important;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      margin-top: 8px !important;
-    }
-    
-    .navbar-burger {
-      color: white;
-    }
-    
-    .hero-bg {
-      background: var(--gradient);
-      color: white;
-      padding: 3rem 1.5rem;
-      margin-bottom: 2rem;
-    }
-    
-    .footer {
-      background: #f8f9fa;
-      margin-top: auto;
-      padding: 2rem 1.5rem;
-    }
-    
-    .button.is-primary {
-      background: var(--primary);
-      transition: all 0.3s ease;
-    }
-    
-    .button.is-primary:hover {
-      background: var(--primary-dark);
-      transform: translateY(-2px);
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %} Home {% endblock title %}</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#4361ee",
+              "primary-dark": "#3a56d4",
+            },
+            animation: {
+              "fade-in": "fadeIn 0.5s ease-in",
+              "slide-up": "slideUp 0.5s ease-out",
+              "slide-down": "slideDown 0.3s ease-out",
+              "scale-in": "scaleIn 0.3s ease-out",
+              shimmer: "shimmer 2s infinite",
+            },
+            keyframes: {
+              fadeIn: {
+                "0%": { opacity: "0" },
+                "100%": { opacity: "1" },
+              },
+              slideUp: {
+                "0%": { transform: "translateY(20px)", opacity: "0" },
+                "100%": { transform: "translateY(0)", opacity: "1" },
+              },
+              slideDown: {
+                "0%": { transform: "translateY(-10px)", opacity: "0" },
+                "100%": { transform: "translateY(0)", opacity: "1" },
+              },
+              scaleIn: {
+                "0%": { transform: "scale(0.95)", opacity: "0" },
+                "100%": { transform: "scale(1)", opacity: "1" },
+              },
+              shimmer: {
+                "0%": { backgroundPosition: "-1000px 0" },
+                "100%": { backgroundPosition: "1000px 0" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .gradient-bg {
+        background: linear-gradient(135deg, #4361ee 0%, #3f37c9 100%);
+      }
+      .hover-lift {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .hover-lift:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
 
+      .button.is-primary {
+        background: var(--primary);
+        transition: all 0.3s ease;
+      }
 
+      .button.is-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+      }
 
+      .search-form {
+        max-width: 600px;
+        margin: 0 auto;
+      }
 
+      .post-excerpt {
+        line-height: 1.6;
+        color: #4a4a4a;
+      }
 
+      .post-excerpt p {
+        margin-bottom: 0.75em;
+      }
 
+      .box {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
 
-
-
-
-
-
-
-.search-form {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.post-excerpt {
-  line-height: 1.6;
-  color: #4a4a4a;
-}
-
-.post-excerpt p {
-  margin-bottom: 0.75em;
-}
-
-.box {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.box:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-
-  </style>
-</head>
-<body>
-  <!-- Sleek Gradient Navigation -->
-  <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
-    <div class="container">
-      <div class="navbar-brand">
-        <a class="navbar-item" href="/">
-          <span class="icon-text">
-            <span class="icon">
-              <i class="fas fa-pen-fancy"></i>
-            </span>
-            <span><strong>ContentMind</strong></span>
-          </span>
-        </a>
-
-        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasic">
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-        </a>
-      </div>
-
-      <div id="navbarBasic" class="navbar-menu">
-        <div class="navbar-start">
-          <a class="navbar-item" href="/">
-            <span class="icon">
-              <i class="fas fa-home"></i>
-            </span>
-            <span>Home</span>
+      .box:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body class="flex flex-col min-h-screen bg-gray-50">
+    <!-- Sleek Gradient Navigation -->
+    <nav
+      class="gradient-bg fixed w-full top-0 z-50 shadow-lg animate-slide-down"
+    >
+      <div class="container mx-auto px-4">
+        <div class="flex justify-between items-center h-16">
+          <a
+            href="/"
+            class="flex items-center space-x-2 text-white font-bold text-xl transition-transform duration-300 hover:scale-105"
+          >
+            <i class="fas fa-pen-fancy"></i>
+            <span>ContentMind</span>
           </a>
-
-          <a class="navbar-item" href="#">
-            <span class="icon">
-              <i class="fas fa-book"></i>
-            </span>
-            <span>Docs</span>
-          </a>
-
-          
+          <!-- Desktop Menu -->
+          <div class="hidden md:flex items-center space-x-1">
+            <a
+              href="/"
+              class="text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:bg-white hover:bg-opacity-20"
+            >
+              <i class="fas fa-home mr-2"></i>Home
+            </a>
+            <a
+              href="#"
+              class="text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:bg-white hover:bg-opacity-20"
+            >
+              <i class="fas fa-book mr-2"></i>Docs
+            </a>
+          </div>
+          <!-- Right Menu -->
+          <div class="hidden md:flex items-center space-x-2">
+            <a
+              href="{% url 'cms_blog:post_search' %}"
+              class="text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:bg-white hover:bg-opacity-20"
+            >
+              <i class="fas fa-search"></i>
+            </a>
+            {% if user.is_superuser %}
+            <a
+              href="{% url 'cms_blog:dashboard' %}"
+              class="bg-gray-900 bg-opacity-50 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:bg-opacity-70"
+            >
+              <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+            </a>
+            <a
+              href="{% url 'cms_blog:create_post' %}"
+              class="bg-white text-primary px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-105"
+            >
+              <i class="fas fa-sticky-note mr-2"></i>Create Post
+            </a>
+            <a
+              href="/admin/"
+              class="bg-white bg-opacity-20 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:bg-opacity-30"
+            >
+              <i class="fas fa-sign-in-alt mr-2"></i>Admin
+            </a>
+            {% endif %}
+          </div>
+          <!-- Mobile Menu Button -->
+          <button
+            id="mobile-menu-btn"
+            class="md:hidden text-white p-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-all duration-300"
+          >
+            <i class="fas fa-bars text-xl"></i>
+          </button>
         </div>
-
-        <div class="navbar-end">
-          <div class="navbar-item">
-            <div class="buttons">
-              <a class="button is-light is-outlined" href="{% url 'cms_blog:post_search' %}">
-                <span class="icon">
-                  <i class="fas fa-search"></i>
-                </span>
-                <span>Search</span>
-              </a>
-              
-              {% if user.is_superuser %}
-                
-             
-                
-              <a class="button is-light" href="admin/">
-                <span class="icon">
-                  <i class="fas fa-sign-in-alt"></i>
-                </span>
-                <span>Admin</span>
-              </a>
-               {% endif %}
-            </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden pb-4 animate-slide-down">
+          <div class="flex flex-col space-y-2">
+            <a
+              href="/"
+              class="text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:bg-white hover:bg-opacity-20"
+            >
+              <i class="fas fa-home mr-2"></i>Home
+            </a>
+            <a
+              href="#"
+              class="text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:bg-white hover:bg-opacity-20"
+            >
+              <i class="fas fa-book mr-2"></i>Docs
+            </a>
+            <a
+              href="{% url 'cms_blog:post_search' %}"
+              class="text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:bg-white hover:bg-opacity-20"
+            >
+              <i class="fas fa-search mr-2"></i>Search
+            </a>
+            {% if user.is_superuser %}
+            <a
+              href="{% url 'cms_blog:dashboard' %}"
+              class="text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:bg-white hover:bg-opacity-20"
+            >
+              <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+            </a>
+            <a
+              href="{% url 'cms_blog:create_post' %}"
+              class="text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:bg-white hover:bg-opacity-20"
+            >
+              <i class="fas fa-sticky-note mr-2"></i>Create Post
+            </a>
+            <a
+              href="/admin/"
+              class="text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:bg-white hover:bg-opacity-20"
+            >
+              <i class="fas fa-sign-in-alt mr-2"></i>Admin
+            </a>
+            {% endif %}
           </div>
         </div>
       </div>
-    </div>
-  </nav>
+    </nav>
 
-  <!-- Main Content -->
-  <section class="section" style="padding-top: 4rem;">
-   
-    <div class="container">
-      {% block content %}
-      {% endblock content %}
-    </div>
-  </section>
-
-  <!-- Modern Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="content has-text-centered">
-        <div class="mb-4">
-          <span class="icon-text">
-            <span class="icon has-text-primary">
-              <i class="fas fa-pen-fancy fa-lg"></i>
-            </span>
-            <span class="title is-4 has-text-weight-bold has-text-dark">ContentMind</span>
-          </span>
-        </div>
-        <p class="has-text-grey">
-          The modern content management system for creators and developers.
-        </p>
-        <p class="mt-3">
-          <a href="#" class="has-text-primary">Terms</a> · 
-          <a href="#" class="has-text-primary">Privacy</a> · 
-          <a href="#" class="has-text-primary">Contact</a>
-        </p>
-        <p class="mt-3 has-text-grey-light">
-          © {% now "Y" %} ContentMind. MIT Licensed.
-        </p>
+    <!-- Main Content -->
+    <main class="flex-1 pt-16 animate-fade-in">
+      <div class="container mx-auto px-4">
+        {% block content %}{% endblock content %}
       </div>
-    </div>
-  </footer>
+    </main>
 
-  <!-- Scripts -->
-  <script src="{% static 'js/main.js' %}"></script>
-  <script>
-    // Mobile burger menu toggle
-    document.addEventListener('DOMContentLoaded', () => {
-      const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+    <!-- Modern Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-auto">
+      <div class="container mx-auto px-4 py-8">
+        <div class="text-center">
+          <div class="flex items-center justify-center space-x-2 mb-4">
+            <i class="fas fa-pen-fancy text-primary text-2xl"></i>
+            <span class="text-xl font-bold text-gray-900">ContentMind</span>
+          </div>
+          <p class="text-gray-600 mb-3">
+            The modern content management system for creators and developers.
+          </p>
+          <p class="text-sm">
+            <a
+              href="#"
+              class="text-primary hover:text-primary-dark transition-colors duration-300"
+              >Terms</a
+            >
+            ·
+            <a
+              href="#"
+              class="text-primary hover:text-primary-dark transition-colors duration-300"
+              >Privacy</a
+            >
+            ·
+            <a
+              href="#"
+              class="text-primary hover:text-primary-dark transition-colors duration-300"
+              >Contact</a
+            >
+          </p>
+          <p class="mt-3 text-gray-400 text-xs">
+            © {% now "Y" %} ContentMind. MIT Licensed.
+          </p>
+        </div>
+      </div>
+    </footer>
 
-      $navbarBurgers.forEach(el => {
-        el.addEventListener('click', () => {
-          const target = el.dataset.target;
-          const $target = document.getElementById(target);
-          el.classList.toggle('is-active');
-          $target.classList.toggle('is-active');
+    <script>
+      // Mobile menu toggle
+      const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+      const mobileMenu = document.getElementById("mobile-menu");
+      if (mobileMenuBtn) {
+        mobileMenuBtn.addEventListener("click", () => {
+          mobileMenu.classList.toggle("hidden");
         });
-      });
-    });
-  </script>
-</body>
+      }
+    </script>
+  </body>
 </html>
